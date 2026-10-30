@@ -1,0 +1,7 @@
+# Works with both mcp 1.x (FastMCP) and mcp 2.x (MCPServer);
+# src/backend/aita/server.py shims the rename.
+mcp>=1.2
+httpx>=0.27
+
+# tests only
+pytest>=8.0

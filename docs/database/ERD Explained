@@ -1,0 +1,200 @@
+There are two categories:
+- Blue tables: Based directly on the supplied data files. 
+- Green tables: Proposed tables needed to build the AITA application. 
+
+1. QUALIFICATION
+Purpose: Stores information about the complete qualification offered to learners.
+Source: data/qualification.csv
+The file contains the qualification:
+CPC10120 — Certificate I in Construction
+Important fields:
+- qualification_code: Unique qualification code, such as CPC10120. 
+- name: Qualification name. 
+- release: Current qualification release number. 
+- nominal_hours: Expected study hours. 
+- start_date and end_date: Qualification availability dates. 
+- description: Description of the qualification. 
+Why it is needed: AITA’s units and learning materials belong to a construction qualification.
+
+2. QUALIFICATION_UNIT
+Purpose: Connects qualifications and units.
+Sources:
+- qualification.csv 
+- The isCoreOf field in units.csv 
+Important fields:
+- qualification_code: References QUALIFICATION. 
+- unit_code: References UNIT. 
+- is_core: Indicates whether the unit is compulsory. 
+Why it is needed: One qualification contains multiple units. A unit could also be used in more than one qualification, so this bridge table creates a many-to-many relationship.
+This table does not currently exist in the files. It was created from the relationship represented by the supplied data.
+
+3. UNIT
+Purpose: Stores information about each unit of competency.
+Source: data/units.csv
+Examples include:
+CPCCCM1011 — Undertake basic estimation and costing
+CPCCWHS1001 — Prepare to work safely in the construction industry
+Important fields:
+- unit_code: Unique code identifying a unit. 
+- name: Unit name. 
+- release: Unit release number. 
+- nominal_hours: Expected learning hours. 
+- unit_descriptor: Description of the unit. 
+- nationally_recognised: Whether it is nationally recognised. 
+Why it is needed: The student selects a unit before viewing learning materials or asking unit-related questions.
+The repository notes that CPCCWHS1001 and CPCWHS1001 should be treated together for White Card material.
+
+4. PERFORMANCE_CRITERION
+Purpose: Stores the competency criteria learners must understand or demonstrate.
+Source: data/performance_criteria.csv
+The supplied fields include:
+- unitCode 
+- criterionNumber 
+- criterionText 
+- moduleRelease 
+For example:
+Unit: CPCCCM1011
+Criterion: 101
+Text: Review plans and specifications for basic construction task.
+Important database fields:
+- unit_code: Identifies the related unit. 
+- criterion_number: Identifies the criterion inside the unit. 
+- criterion_text: Describes what the learner must do. 
+- module_release: Criterion or module version. 
+Why it is needed: Learning materials and assessment questions can be connected to specific learning outcomes.
+The primary key should combine unit_code and criterion_number, because the same criterion number could appear in different units.
+
+5. LEARNING_MATERIAL
+Purpose: Stores the teaching content that AITA displays, searches and reads aloud.
+Sources:
+- delivery_material_index.csv 
+- delivery_material_text.jsonl 
+- delivery_material_html.jsonl 
+Important fields:
+- material_id: Proposed unique database identifier. 
+- unit_code: Unit to which the material belongs. 
+- criterion_number: Related performance criterion, if available. 
+- sequence: Order in which the material should be presented. 
+- material_type: For example, ELEMENT, PC or SLIDE. 
+- pc_variant: Material variation number. 
+- title: Material title. 
+- content_text: Plain-text learning content. 
+- content_html: Formatted HTML content. 
+- source_format: Original format, such as DOCX or slide. 
+Why it is needed: The README states that students must be able to select material, read it in order and have it spoken aloud.
+criterion_number is optional because some records, particularly slides and general unit material, do not connect to a specific criterion.
+material_id was proposed because the supplied files do not contain a single reliable material identifier.
+
+6. ASSESSMENT_QUESTION
+Purpose: Stores assessment questions and related information.
+Source: data/assessment_questions.jsonl
+Important fields:
+- question_id: Proposed unique identifier. 
+- unit_code: Unit being assessed. 
+- assessment_number: Assessment activity number. 
+- section_number: Section containing the question. 
+- question_number: Question number. 
+- question_type: Multiple choice, true/false or another type. 
+- structural: Identifies headings and instruction rows. 
+- question_text: Actual question. 
+- model_answer: Provided model answer. 
+Why it is needed: The project requires AITA to explain feedback for answers that have already been marked by a human assessor.
+Rows where structural = true are headings or instructions rather than questions. The repository’s DATA_NOTES.md recommends filtering these out when working with actual questions.
+Model answers should have restricted access because the README says AITA must not become a public answer-key system.
+
+7. QUESTION_CRITERION_MAP
+Purpose: Connects assessment questions to performance criteria and evidence requirements.
+Source: The mapping and evidence fields in assessment_questions.jsonl.
+Example mapping:
+1.1, k2
+This could mean the question relates to performance criterion 1.1 and knowledge-evidence item k2.
+Important fields:
+- question_id: References the assessment question. 
+- unit_code: Identifies the relevant unit. 
+- criterion_number: References the performance criterion. 
+- evidence_reference: Stores knowledge or evidence codes such as k2. 
+Why it is needed: One assessment question can relate to multiple criteria, and one criterion can appear in multiple questions. Therefore, this is a bridge table.
+The mapping values must be cleaned and separated during data import because they are currently stored as comma-separated text.
+
+Proposed AITA application tables
+The following green tables are not present as database tables in the supplied data. They were proposed from the system features described in README.md, CLIENT_BRIEF.md and the project PDF.
+
+8. STUDENT
+Purpose: Stores basic information about the learner using AITA.
+Important fields:
+- student_id: Unique student identifier. 
+- display_name: Student’s displayed name. 
+- email: Student’s email address. 
+- created_at: Date and time the account was created. 
+Why it is needed: Progress, questions, conversations and assessment attempts must be connected to a particular student.
+The brief describes AITA as a study companion for learners, but the ZIP does not provide existing student records. Therefore, this is a proposed table.
+
+9. UNIT_ENROLMENT
+Purpose: Records which unit a student is studying.
+Important fields:
+- enrolment_id: Unique enrolment identifier. 
+- student_id: References the student. 
+- unit_code: References the selected unit. 
+- started_at: When the student began the unit. 
+- status: For example, active, completed or paused. 
+Why it is needed: The README says students should be able to select a unit and its learning material. This table connects students and units.
+It also allows one student to study multiple units and one unit to have multiple students.
+
+10. MATERIAL_PROGRESS
+Purpose: Records a student’s progress through learning materials.
+Important fields:
+- enrolment_id: Identifies the student’s unit enrolment. 
+- material_id: Identifies the learning material. 
+- last_position: Last reading or audio position. 
+- completed: Whether the student finished the material. 
+- updated_at: When progress was last updated. 
+Why it is needed: The README includes basic progress tracking as an optional MVP feature.
+This table can allow a student to stop listening and continue later.
+
+11. ASSESSMENT_ATTEMPT
+Purpose: Stores a student’s answer and the feedback provided by a human assessor.
+Important fields:
+- attempt_id: Unique attempt identifier. 
+- student_id: Student who answered. 
+- question_id: Question answered. 
+- student_answer: The student’s submitted response. 
+- human_marked_status: For example, correct or incorrect. 
+- assessor_feedback: Feedback from the human assessor. 
+- attempted_at: Time of the attempt. 
+Why it is needed: The README says AITA should:
+- Explain why a human-marked correct answer is correct. 
+- Explain why a human-marked incorrect answer is incorrect. 
+- Direct the learner back to relevant material. 
+The status is called human_marked_status because AITA is not permitted to grade answers or decide competency.
+
+12. CHAT_SESSION
+Purpose: Groups conversations between a student and AITA.
+Important fields:
+- session_id: Unique conversation identifier. 
+- student_id: Student who started the conversation. 
+- unit_code: Unit being discussed. 
+- started_at: When the conversation began. 
+Why it is needed: A student may have multiple study conversations at different times or about different units.
+unit_code can be optional if a student asks a general question before selecting a unit.
+
+13. CHAT_MESSAGE
+Purpose: Stores individual student questions and AITA responses.
+Important fields:
+- message_id: Unique message identifier. 
+- session_id: Conversation containing the message. 
+- role: Identifies student or assistant. 
+- message_text: Question or answer text. 
+- input_mode: For example, text or voice. 
+- created_at: Message time. 
+Why it is needed: The project requires text questions first and spoken questions later. Speech-to-text converts a spoken question into text, which can then be saved here.
+Both student questions and AI explanations can be stored in the same table using the role field.
+
+14. MESSAGE_SOURCE
+Purpose: Records which course materials were used to produce an AITA response.
+Important fields:
+- message_id: AITA response being supported. 
+- material_id: Retrieved learning material. 
+- source_rank: Order of the retrieved source. 
+- relevance_score: How closely the material matched the question. 
+Why it is needed: The README states that AITA’s answers must be grounded in the supplied training materials. If the material does not support an answer, AITA should say so.
+One answer may use several materials, and one material may support multiple answers. Therefore, MESSAGE_SOURCE is a many-to-many bridge table.

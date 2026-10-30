@@ -1,0 +1,22 @@
+{
+  "qualification": 1,
+  "unit": 9,
+  "qualification_unit": 9,
+  "performance_criterion": 485,
+  "learning_material": 1091,
+  "assessment_question": 657,
+  "question_criterion_map": 1321,
+  "foundation_framework": 105,
+  "source_record": 4069,
+  "readable_material": 630,
+  "real_questions": 482,
+  "mapping_resolution": {
+    "exact": 516,
+    "unresolved_evidence": 700,
+    "unresolved_reference": 24,
+    "white_card_alias": 81
+  },
+  "unresolved_material_criteria": 18,
+  "integrity_check": "ok",
+  "foreign_key_errors": []
+}
