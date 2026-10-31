@@ -35,51 +35,6 @@ Select material -> Read aloud -> Ask question -> Retrieve content -> AI answer
 | Week 5 | Q&A, voice, and assessment explanation | Connect search to AI answer flow; add question input; display grounded answer; add voice input; add guardrails for unsupported answers and no marking; create assessment feedback explanation demo | Improve response wording for low-literacy learners; add simple progress tracking if time allows | Text Q&A demo, voice question demo, grounded answer flow, assessment explanation demo |
 | Week 6 | Testing, polish, and final delivery | Test full demo flow; fix bugs; update README/docs; complete technical specification; prepare final demo script | UI polish; document future work such as OCR, vector search, and mobile support | Final MVP, test notes, final documentation, demo script |
 
-## Phase 2: Six-Week Database and Production Readiness Plan
-
-Phase 2 starts by closing any Phase 1 acceptance actions carried over from this semester. Production database and learner-data implementation must not begin until the Phase 1 MVP gate is complete and the partner has confirmed the meaning of GAR, the system boundary, data ownership, and privacy requirements. If the carry-over or partner decisions take longer than Week 1, the team should re-plan the remaining work rather than bypass these gates.
-
-| Week | Sprint Goal | Must Have Tasks | Should / Could Tasks | Deliverables |
-|---|---|---|---|---|
-| Week 1 | Close Phase 1 and confirm Phase 2 scope | Resolve carried-over Phase 1 checks: frontend test and lint issues; obtain model access or an approved scope exception; settle image-only slide and data-mapping decisions; rerun the Must Have matrix and current-branch checks; record team/partner review. After the Phase 1 gate is cleared, confirm GAR meaning, system boundary, database scope, data ownership, and privacy rules (DB-01 and DB-02). | Draft the Phase 2 backlog and identify external dependencies. | Phase 1 acceptance record; partner-approved Phase 2 scope, glossary, ownership and privacy decisions, and prioritised backlog. |
-| Week 2 | Complete production data design | Design and review the MySQL-compatible relational schema, ERD, DDL, tenant boundaries, indexes, and learner-progress model (DB-03). Confirm migration, authentication, and MCP data-access contracts. | Prepare a retrieval-index upgrade design if the approved scope requires it (DB-06). | Reviewed ERD and DDL; agreed data and service contracts. |
-| Week 3 | Build and validate the data foundation | Implement a repeatable import and validation pipeline (DB-04); implement supported criterion and assessment mappings; record unresolved mappings and protect model answers from public material search (DB-05). | Profile import performance and document data-quality improvements. | Rebuildable seeded database; import audit and mapping validation results. |
-| Week 4 | Connect production data and approved AI services | Move the MCP tools onto the approved data-access layer while preserving their contracts (DB-07); configure approved model and speech services, secret handling, and basic observability (DB-08). | Add a lexical or hybrid retrieval index if approved by the scope decision. | Database-backed MCP flow; configured services; integration evidence and operational notes. |
-| Week 5 | Add secure accounts and persistent learner progress | Replace prototype authentication and browser-only progress with the approved authenticated service (DB-09); implement loading, permission, unavailable, and stale-data states (DB-10). Support learner-owned progress and cross-device resume while enforcing tenant boundaries. | Refine recovery and accessibility flows based on evaluation feedback. | Authentication and progress flow; permission/error-state evidence; updated frontend integration. |
-| Week 6 | Evaluate, document, and prepare handover | Run end-to-end, tenant-isolation, performance, migration, backup, and recovery checks (DB-11 and DB-12); complete the technical specification (DB-13); review results with the team and client and agree handover actions. | Prioritise follow-up improvements for a later release. | Evaluation results; reviewed technical specification; client-agreed handover and outstanding-work record. |
-
-The six-week schedule is a planning target, not a commitment to implement an unapproved database scope. Weeks 2–6 depend on the Week 1 acceptance and partner-decision gate, confirmed model access or an approved exception, and available team capacity.
-
-### Phase 2 Milestones
-
-| Milestone | Deadline | Success Criteria |
-|---|---|---|
-| P2-M1: Phase 1 Gate and Scope Confirmed | End of Week 1 | Phase 1 carry-over actions are closed or have an approved exception; the partner has confirmed GAR meaning, system boundary, data scope, ownership, and privacy rules. |
-| P2-M2: Data Design Approved | End of Week 2 | ERD, relational schema, DDL, tenant boundaries, and service contracts are reviewed against the approved scope. |
-| P2-M3: Data Foundation Validated | End of Week 3 | Import can rebuild the seeded database; validation and mapping results are recorded; model answers are protected from public material search. |
-| P2-M4: Production Services Integrated | End of Week 4 | MCP tools use the approved data layer; approved model/speech configuration and integration checks are documented. |
-| P2-M5: Secure Learner Workflow Ready | End of Week 5 | Authentication and learner-owned progress work across sessions/devices, with permission and error states handled. |
-| P2-M6: Evaluation and Handover Complete | End of Week 6 | Tenant-isolation, end-to-end, performance, migration, backup, and recovery checks are recorded; the technical specification and client-agreed handover are reviewed. |
-
-### Phase 2 Detailed Task Table
-
-| ID | Area | Task | Priority | Sprint | Owner | Status | Acceptance Criteria |
-|---|---|---|---|---|---|---|---|
-| P2-01 | Team / QA | Close Phase 1 carry-over and pass the MVP gate | Must Have | Week 1 | All + QA | Planned | Frontend test/lint issues are resolved or approved; model access or a scope exception is recorded; slide and mapping decisions are settled; current-branch checks and Must Have review are recorded; team/partner review is obtained. |
-| DB-01 | Product / Planning | Confirm GAR definition and database scope | Must Have | Week 1 | Project Manager / Product Owner | Planned | Partner approval records the GAR definition, system boundary, data scope, ownership, privacy rules, and agreed Phase 2 backlog. This task starts after the Phase 1 MVP gate. |
-| DB-02 | Product / Data | Approve production data ownership and privacy boundaries | Must Have | Week 1 | Project Manager + Data / DB | Planned | An approved data-ownership matrix covers learner profile, progress, assessment decisions, course content, model answers, audit logs, and assessor access. |
-| DB-03 | Data / Database | Design the canonical relational schema | Must Have | Week 2 | Data / Database | Planned | Reviewed ERD and MySQL-compatible DDL include keys, indexes, timestamps, tenant boundaries, source identifiers, and the agreed learner-progress model. |
-| DB-04 | Data / Database | Build repeatable import and validation | Must Have | Week 3 | Data / Database | Planned | Source data can be imported idempotently into a clean database; an audit reports counts, duplicates, missing joins, mapping exceptions, and rejected records. |
-| DB-05 | Data / Database | Implement criterion and assessment mappings | Must Have | Week 3 | Data / Database | Planned | Supported question-to-criterion-to-material mappings are queryable; unresolved mappings are logged; model answers are excluded from public material search. |
-| DB-06 | Data / Retrieval | Add retrieval-index storage and upgrade path | Should Have | Week 3 | Data / Retrieval | Planned | The approved lexical index is versioned and rebuildable; any vector/hybrid path has a documented decision and does not change MCP tool contracts. |
-| DB-07 | MCP / AI | Persist MCP tool contracts over the production data layer | Must Have | Week 4 | MCP / AI + Data / DB | Planned | All six tools use the approved data-access layer with versioned schemas, tenant-aware rules, defined errors, and seeded-database integration checks. |
-| DB-08 | MCP / AI | Configure approved model, speech, and observability services | Must Have | Week 4 | MCP / AI | Planned | Approved services use managed secrets; failures/latency are observable; source traceability supports development without unnecessary sensitive learner-data logging. |
-| DB-09 | Frontend / Voice | Replace prototype authentication and progress storage | Must Have | Week 5 | Frontend / Voice | Planned | Secure login/logout and learner-owned progress replace mock/local-only services; access is tenant-scoped and private progress is not exposed to assessors. |
-| DB-10 | Frontend / Voice | Handle production loading, permission, and error states | Must Have | Week 5 | Frontend / Voice | Planned | Database-backed views clearly handle loading, unauthorised, forbidden, unavailable, empty, and stale-data states. |
-| DB-11 | QA / Security | Test database and tenant isolation | Must Have | Week 6 | QA / Security | Planned | Tests show one organisation cannot access another organisation's units, learners, progress, assessment data, or model-answer records. |
-| DB-12 | QA / Operations | Verify performance, migration, backup, and recovery | Must Have | Week 6 | QA / Operations + Data / DB | Planned | Import/retrieval performance, migration and rollback, backup ownership, and restore evidence are recorded against agreed expectations. |
-| DB-13 | UX / Documentation | Produce the Phase 2 technical specification and handover | Must Have | Week 6 | UX / Documentation + All | Planned | The reviewed specification includes approved scope, architecture, ERD, data flow, MCP contracts, privacy model, deployment assumptions, limitations, evaluation results, and client-agreed handover actions. |
-
 ## Phase 1 Milestones
 
 | Milestone | Deadline | Success Criteria |
@@ -124,6 +79,51 @@ The six-week schedule is a planning target, not a commitment to implement an una
 | SP-27 | UX / Docs | Prepare demo script | Must Have | Week 6 | UX / Docs | To Do | Demo script includes selected unit, sample question, and expected flow. |
 | SP-28 | Team | Final review and polish | Must Have | Week 6 | All | To Do | Team reviews prototype, fixes major issues, and confirms final deliverables. |
 | SP-29 | Frontend / Voice | Add resumable progress design or simple local progress tracking | Should Have | Week 5 | Frontend + UX / Docs | To Do | Student can return to the last selected unit/material item, or the design explains how resumable progress will work. |
+
+## Phase 2: Six-Week Database and Production Readiness Plan
+
+Phase 2 starts by closing any Phase 1 acceptance actions carried over from this semester. Production database and learner-data implementation must not begin until the Phase 1 MVP gate is complete and the partner has confirmed the meaning of GAR, the system boundary, data ownership, and privacy requirements. If the carry-over or partner decisions take longer than Week 1, the team should re-plan the remaining work rather than bypass these gates.
+
+| Week | Sprint Goal | Must Have Tasks | Should / Could Tasks | Deliverables |
+|---|---|---|---|---|
+| Week 1 | Close Phase 1 and confirm Phase 2 scope | Resolve carried-over Phase 1 checks: frontend test and lint issues; obtain model access or an approved scope exception; settle image-only slide and data-mapping decisions; rerun the Must Have matrix and current-branch checks; record team/partner review. After the Phase 1 gate is cleared, confirm GAR meaning, system boundary, database scope, data ownership, and privacy rules (DB-01 and DB-02). | Draft the Phase 2 backlog and identify external dependencies. | Phase 1 acceptance record; partner-approved Phase 2 scope, glossary, ownership and privacy decisions, and prioritised backlog. |
+| Week 2 | Complete production data design | Design and review the MySQL-compatible relational schema, ERD, DDL, tenant boundaries, indexes, and learner-progress model (DB-03). Confirm migration, authentication, and MCP data-access contracts. | Prepare a retrieval-index upgrade design if the approved scope requires it (DB-06). | Reviewed ERD and DDL; agreed data and service contracts. |
+| Week 3 | Build and validate the data foundation | Implement a repeatable import and validation pipeline (DB-04); implement supported criterion and assessment mappings; record unresolved mappings and protect model answers from public material search (DB-05). | Profile import performance and document data-quality improvements. | Rebuildable seeded database; import audit and mapping validation results. |
+| Week 4 | Connect production data and approved AI services | Move the MCP tools onto the approved data-access layer while preserving their contracts (DB-07); configure approved model and speech services, secret handling, and basic observability (DB-08). | Add a lexical or hybrid retrieval index if approved by the scope decision. | Database-backed MCP flow; configured services; integration evidence and operational notes. |
+| Week 5 | Add secure accounts and persistent learner progress | Replace prototype authentication and browser-only progress with the approved authenticated service (DB-09); implement loading, permission, unavailable, and stale-data states (DB-10). Support learner-owned progress and cross-device resume while enforcing tenant boundaries. | Refine recovery and accessibility flows based on evaluation feedback. | Authentication and progress flow; permission/error-state evidence; updated frontend integration. |
+| Week 6 | Evaluate, document, and prepare handover | Run end-to-end, tenant-isolation, performance, migration, backup, and recovery checks (DB-11 and DB-12); complete the technical specification (DB-13); review results with the team and client and agree handover actions. | Prioritise follow-up improvements for a later release. | Evaluation results; reviewed technical specification; client-agreed handover and outstanding-work record. |
+
+The six-week schedule is a planning target, not a commitment to implement an unapproved database scope. Weeks 2–6 depend on the Week 1 acceptance and partner-decision gate, confirmed model access or an approved exception, and available team capacity.
+
+### Phase 2 Milestones
+
+| Milestone | Deadline | Success Criteria |
+|---|---|---|
+| P2-M1: Phase 1 Gate and Scope Confirmed | End of Week 1 | Phase 1 carry-over actions are closed or have an approved exception; the partner has confirmed GAR meaning, system boundary, data scope, ownership, and privacy rules. |
+| P2-M2: Data Design Approved | End of Week 2 | ERD, relational schema, DDL, tenant boundaries, and service contracts are reviewed against the approved scope. |
+| P2-M3: Data Foundation Validated | End of Week 3 | Import can rebuild the seeded database; validation and mapping results are recorded; model answers are protected from public material search. |
+| P2-M4: Production Services Integrated | End of Week 4 | MCP tools use the approved data layer; approved model/speech configuration and integration checks are documented. |
+| P2-M5: Secure Learner Workflow Ready | End of Week 5 | Authentication and learner-owned progress work across sessions/devices, with permission and error states handled. |
+| P2-M6: Evaluation and Handover Complete | End of Week 6 | Tenant-isolation, end-to-end, performance, migration, backup, and recovery checks are recorded; the technical specification and client-agreed handover are reviewed. |
+
+### Phase 2 Detailed Task Table
+
+| ID | Area | Task | Priority | Sprint | Owner | Status | Acceptance Criteria |
+|---|---|---|---|---|---|---|---|
+| P2-01 | Team / QA | Close Phase 1 carry-over and pass the MVP gate | Must Have | Week 1 | All + QA | Planned | Frontend test/lint issues are resolved or approved; model access or a scope exception is recorded; slide and mapping decisions are settled; current-branch checks and Must Have review are recorded; team/partner review is obtained. |
+| DB-01 | Product / Planning | Confirm GAR definition and database scope | Must Have | Week 1 | Project Manager / Product Owner | Planned | Partner approval records the GAR definition, system boundary, data scope, ownership, privacy rules, and agreed Phase 2 backlog. This task starts after the Phase 1 MVP gate. |
+| DB-02 | Product / Data | Approve production data ownership and privacy boundaries | Must Have | Week 1 | Project Manager + Data / DB | Planned | An approved data-ownership matrix covers learner profile, progress, assessment decisions, course content, model answers, audit logs, and assessor access. |
+| DB-03 | Data / Database | Design the canonical relational schema | Must Have | Week 2 | Data / Database | Planned | Reviewed ERD and MySQL-compatible DDL include keys, indexes, timestamps, tenant boundaries, source identifiers, and the agreed learner-progress model. |
+| DB-04 | Data / Database | Build repeatable import and validation | Must Have | Week 3 | Data / Database | Planned | Source data can be imported idempotently into a clean database; an audit reports counts, duplicates, missing joins, mapping exceptions, and rejected records. |
+| DB-05 | Data / Database | Implement criterion and assessment mappings | Must Have | Week 3 | Data / Database | Planned | Supported question-to-criterion-to-material mappings are queryable; unresolved mappings are logged; model answers are excluded from public material search. |
+| DB-06 | Data / Retrieval | Add retrieval-index storage and upgrade path | Should Have | Week 3 | Data / Retrieval | Planned | The approved lexical index is versioned and rebuildable; any vector/hybrid path has a documented decision and does not change MCP tool contracts. |
+| DB-07 | MCP / AI | Persist MCP tool contracts over the production data layer | Must Have | Week 4 | MCP / AI + Data / DB | Planned | All six tools use the approved data-access layer with versioned schemas, tenant-aware rules, defined errors, and seeded-database integration checks. |
+| DB-08 | MCP / AI | Configure approved model, speech, and observability services | Must Have | Week 4 | MCP / AI | Planned | Approved services use managed secrets; failures/latency are observable; source traceability supports development without unnecessary sensitive learner-data logging. |
+| DB-09 | Frontend / Voice | Replace prototype authentication and progress storage | Must Have | Week 5 | Frontend / Voice | Planned | Secure login/logout and learner-owned progress replace mock/local-only services; access is tenant-scoped and private progress is not exposed to assessors. |
+| DB-10 | Frontend / Voice | Handle production loading, permission, and error states | Must Have | Week 5 | Frontend / Voice | Planned | Database-backed views clearly handle loading, unauthorised, forbidden, unavailable, empty, and stale-data states. |
+| DB-11 | QA / Security | Test database and tenant isolation | Must Have | Week 6 | QA / Security | Planned | Tests show one organisation cannot access another organisation's units, learners, progress, assessment data, or model-answer records. |
+| DB-12 | QA / Operations | Verify performance, migration, backup, and recovery | Must Have | Week 6 | QA / Operations + Data / DB | Planned | Import/retrieval performance, migration and rollback, backup ownership, and restore evidence are recorded against agreed expectations. |
+| DB-13 | UX / Documentation | Produce the Phase 2 technical specification and handover | Must Have | Week 6 | UX / Documentation + All | Planned | The reviewed specification includes approved scope, architecture, ERD, data flow, MCP contracts, privacy model, deployment assumptions, limitations, evaluation results, and client-agreed handover actions. |
 
 ## Board Columns
 
