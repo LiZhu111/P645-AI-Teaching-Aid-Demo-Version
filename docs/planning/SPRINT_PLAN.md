@@ -1,6 +1,6 @@
 # Six-Week Sprint Plan
 
-This plan is designed for a six-week MVP build. The goal is to create a working prototype that demonstrates Aita's core learning flow:
+The Phase 1 plan below is designed for a six-week MVP build. The goal is to create a working prototype that demonstrates Aita's core learning flow:
 
 ```text
 Select material -> Read aloud -> Ask question -> Retrieve content -> AI answer
@@ -24,7 +24,7 @@ Select material -> Read aloud -> Ask question -> Retrieve content -> AI answer
 | Frontend / Voice | Web interface, material browser, read-aloud controls, text Q&A, voice input |
 | UX / Docs / Evidence | User stories, wireframes, user flows, sprint evidence, technical documentation, demo script |
 
-## Six-Week Plan
+## Phase 1: Six-Week MVP Plan
 
 | Week | Sprint Goal | Must Have Tasks | Should / Could Tasks | Deliverables |
 |---|---|---|---|---|
@@ -34,6 +34,21 @@ Select material -> Read aloud -> Ask question -> Retrieve content -> AI answer
 | Week 4 | Read-aloud and basic retrieval | Add read-aloud button; add stop/pause controls; chunk material; implement basic keyword search; define prompt template | Add source reference display; start retrieval test questions | Read-aloud demo, searchable chunks, basic search, prompt draft |
 | Week 5 | Q&A, voice, and assessment explanation | Connect search to AI answer flow; add question input; display grounded answer; add voice input; add guardrails for unsupported answers and no marking; create assessment feedback explanation demo | Improve response wording for low-literacy learners; add simple progress tracking if time allows | Text Q&A demo, voice question demo, grounded answer flow, assessment explanation demo |
 | Week 6 | Testing, polish, and final delivery | Test full demo flow; fix bugs; update README/docs; complete technical specification; prepare final demo script | UI polish; document future work such as OCR, vector search, and mobile support | Final MVP, test notes, final documentation, demo script |
+
+## Phase 2: Six-Week Database and Production Readiness Plan
+
+Phase 2 starts by closing any Phase 1 acceptance actions carried over from this semester. Production database and learner-data implementation must not begin until the Phase 1 MVP gate is complete and the partner has confirmed the meaning of GAR, the system boundary, data ownership, and privacy requirements. If the carry-over or partner decisions take longer than Week 1, the team should re-plan the remaining work rather than bypass these gates.
+
+| Week | Sprint Goal | Must Have Tasks | Should / Could Tasks | Deliverables |
+|---|---|---|---|---|
+| Week 1 | Close Phase 1 and confirm Phase 2 scope | Resolve carried-over Phase 1 checks: frontend test and lint issues; obtain model access or an approved scope exception; settle image-only slide and data-mapping decisions; rerun the Must Have matrix and current-branch checks; record team/partner review. After the Phase 1 gate is cleared, confirm GAR meaning, system boundary, database scope, data ownership, and privacy rules (DB-01 and DB-02). | Draft the Phase 2 backlog and identify external dependencies. | Phase 1 acceptance record; partner-approved Phase 2 scope, glossary, ownership and privacy decisions, and prioritised backlog. |
+| Week 2 | Complete production data design | Design and review the MySQL-compatible relational schema, ERD, DDL, tenant boundaries, indexes, and learner-progress model (DB-03). Confirm migration, authentication, and MCP data-access contracts. | Prepare a retrieval-index upgrade design if the approved scope requires it (DB-06). | Reviewed ERD and DDL; agreed data and service contracts. |
+| Week 3 | Build and validate the data foundation | Implement a repeatable import and validation pipeline (DB-04); implement supported criterion and assessment mappings; record unresolved mappings and protect model answers from public material search (DB-05). | Profile import performance and document data-quality improvements. | Rebuildable seeded database; import audit and mapping validation results. |
+| Week 4 | Connect production data and approved AI services | Move the MCP tools onto the approved data-access layer while preserving their contracts (DB-07); configure approved model and speech services, secret handling, and basic observability (DB-08). | Add a lexical or hybrid retrieval index if approved by the scope decision. | Database-backed MCP flow; configured services; integration evidence and operational notes. |
+| Week 5 | Add secure accounts and persistent learner progress | Replace prototype authentication and browser-only progress with the approved authenticated service (DB-09); implement loading, permission, unavailable, and stale-data states (DB-10). Support learner-owned progress and cross-device resume while enforcing tenant boundaries. | Refine recovery and accessibility flows based on evaluation feedback. | Authentication and progress flow; permission/error-state evidence; updated frontend integration. |
+| Week 6 | Evaluate, document, and prepare handover | Run end-to-end, tenant-isolation, performance, migration, backup, and recovery checks (DB-11 and DB-12); complete the technical specification (DB-13); review results with the team and client and agree handover actions. | Prioritise follow-up improvements for a later release. | Evaluation results; reviewed technical specification; client-agreed handover and outstanding-work record. |
+
+The six-week schedule is a planning target, not a commitment to implement an unapproved database scope. Weeks 2–6 depend on the Week 1 acceptance and partner-decision gate, confirmed model access or an approved exception, and available team capacity.
 
 ## Milestones
 
